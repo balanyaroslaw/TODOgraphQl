@@ -24,7 +24,7 @@ export class Schema
         postTodo(text:String, contextValue:UserInput): Todo,
         deleteTodo(id:Int, contextValue:UserInput): Todo,
         updateTextTodo(text:String, id:Int, contextValue:UserInput):Todo,
-        updateStatusTodo(text:String, id:Int, contextValue:UserInput):Todo,
+        updateStatusTodo(status:String, id:Int, contextValue:UserInput):Todo,
         findTodo(contextValue:UserInput, text:String):Todo
     }
   `;

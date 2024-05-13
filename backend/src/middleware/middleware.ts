@@ -7,7 +7,7 @@ export class Middleware
         if(context)
         {
             const authHeader:String = context
-            const token = authHeader.split('Bearer')[0]
+            const token = authHeader.split('Bearer')[1]
             if(token)
             {
                 try {

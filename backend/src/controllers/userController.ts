@@ -32,16 +32,17 @@ export class UserController
                 {
                     const token:string = jwt.sign({id:arg.id, username: arg.username, email:arg.email}, "SOMESTRING",{expiresIn:"15h"});
                     const password = await bcrypt.hash(arg.password, 10)
-                    console.log([arg.username, arg.email, password, token])
                     this.connection.createConnection.query(this.queries.signUpUser,[arg.username, arg.email, password, token],(error:Error|null, response:any)=>
                     {
                         if(error) return reject(error)
-                        return resolve(response)
+                        this.connection.createConnection.query(this.queries.findUserByEmail,[arg.email],(error:Error|null, response:any)=>{
+                            return resolve(response)
+                        })
                     })
                 }
                 else
                 {
-                    reject(new GraphQLError("It's error is already exist"))
+                    reject(new GraphQLError("It's email is already exist"))
                 }
             })
         })
@@ -64,7 +65,12 @@ export class UserController
                             this.connection.createConnection.query(this.queries.attatchToken,[token, user[0].email],(error:Error|null, response:any)=>
                             {
                                 if(error) return reject(error)
-                                return resolve(user[0])
+                                    this.connection.createConnection.query(this.queries.findUserByEmail,[arg.email],(error:Error|null, response:any)=>
+                                        {
+                                            if(error) return reject(error)
+                                            let updatedUser:Array<IUser> = JSON.parse(JSON.stringify(response))
+                                            return resolve(updatedUser[0])
+                                        })
                             })
                         }
                         else
